@@ -361,6 +361,16 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                                                 onChange={this.onSummaryChanged}
                                                 fluid />
                                         </div>
+                                        
+                                         <div className="textArea">
+                                            <Text content={this.localize("GSummary")} />
+                                            <TextArea
+                                                autoFocus
+                                                placeholder={this.localize("GSummary")}
+                                                value={this.state.summary}
+                                                onChange={this.onSummaryChanged}
+                                                fluid />
+                                        </div>
 
                                         <Input className="inputField"
                                             value={this.state.author}
