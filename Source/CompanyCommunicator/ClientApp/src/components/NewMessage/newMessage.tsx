@@ -13,12 +13,15 @@ import './newMessage.scss';
 import './teamTheme.scss';
 import { getDraftNotification, getTeams, createDraftNotification, updateDraftNotification, searchGroups, getGroups, verifyGroupAccess } from '../../apis/messageListApi';
 import {
-    getInitAdaptiveCard, setCardTitle, setCardImageLink, setCardSummary,
+    getInitAdaptiveCard, setCardTitle, setCardImageLink, setCardSummary, setCardSummary1,
     setCardAuthor, setCardBtn
 } from '../AdaptiveCard/adaptiveCard';
 import { getBaseUrl } from '../../configVariables';
 import { ImageUtil } from '../../utility/imageutility';
 import { TFunction } from "i18next";
+import { Editor } from "react-draft-wysiwyg";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { EditorState } from 'draft-js';
 
 type dropdownItem = {
     key: string,
@@ -41,7 +44,8 @@ export interface IDraftMessage {
     teams: any[],
     rosters: any[],
     groups: any[],
-    allUsers: boolean
+    allUsers: boolean,
+    editorState?: any
 }
 
 export interface formState {
@@ -75,6 +79,7 @@ export interface formState {
     selectedGroups: dropdownItem[],
     errorImageUrlMessage: string,
     errorButtonUrlMessage: string,
+    editorState?: any
 }
 
 export interface INewMessageProps extends RouteComponentProps, WithTranslation {
@@ -120,8 +125,16 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
             selectedGroups: [],
             errorImageUrlMessage: "",
             errorButtonUrlMessage: "",
+            editorState: EditorState.createEmpty(),
         }
     }
+
+    onEditorStateChange: Function = (editorState) => {
+        this.setState({
+          editorState,
+        });
+        console.log("editorState : " + this.state.editorState);
+      };
 
     public async componentDidMount() {
         microsoftTeams.initialize();
@@ -211,6 +224,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         let imgUrl = getBaseUrl() + "/image/imagePlaceholder.png";
         setCardImageLink(card, imgUrl);
         setCardSummary(card, summaryAsString);
+        setCardSummary1(card, summaryAsString);
         setCardAuthor(card, authorAsString);
         setCardBtn(card, buttonTitleAsString, "https://adaptivecards.io");
     }
@@ -294,6 +308,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
             setCardTitle(this.card, draftMessageDetail.title);
             setCardImageLink(this.card, draftMessageDetail.imageLink);
             setCardSummary(this.card, draftMessageDetail.summary);
+            setCardSummary1(this.card, draftMessageDetail.summary);
             setCardAuthor(this.card, draftMessageDetail.author);
             setCardBtn(this.card, draftMessageDetail.buttonTitle, draftMessageDetail.buttonLink);
 
@@ -319,6 +334,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
     }
 
     public render(): JSX.Element {
+        const { editorState } = this.state;
         if (this.state.loader) {
             return (
                 <div className="Loader">
@@ -335,7 +351,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                                     <Flex column className="formContentContainer">
                                         <Input className="inputField"
                                             value={this.state.title}
-                                            label={this.localize("TitleText")}
+                                            label={this.localize("TitleTextGleason")}
                                             placeholder={this.localize("PlaceHolderTitle")}
                                             onChange={this.onTitleChanged}
                                             autoComplete="off"
@@ -360,7 +376,29 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                                                 value={this.state.summary}
                                                 onChange={this.onSummaryChanged}
                                                 fluid />
+
+                                             {/* <Editor
+                                                toolbarClassName="toolbarClassName"
+                                                wrapperClassName="wrapperClassName"
+                                                editorClassName="editorClassName"
+                                                //onEditorStateChange={this.onEditorStateChange}
+                                                />    */}
                                         </div>
+
+                                        <div>
+                                        <Text content={this.localize("RichTextEditor")} />
+        <Editor
+          editorState={editorState}
+          wrapperClassName="demo-wrapper"
+          editorClassName="demo-editor"
+          onEditorStateChange={this.onEditorStateChange}
+          placeholder={this.localize("RichTextEditor")}
+        />
+        {/* <textarea
+          disabled
+          value={editorState.getCurrentContent()}
+        /> */}
+      </div>
 
                                         <Input className="inputField"
                                             value={this.state.author}
@@ -774,6 +812,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         setCardTitle(this.card, event.target.value);
         setCardImageLink(this.card, this.state.imageLink);
         setCardSummary(this.card, this.state.summary);
+        setCardSummary1(this.card, this.state.summary);
         setCardAuthor(this.card, this.state.author);
         setCardBtn(this.card, this.state.btnTitle, this.state.btnLink);
         this.setState({
@@ -803,6 +842,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         setCardTitle(this.card, this.state.title);
         setCardImageLink(this.card, event.target.value);
         setCardSummary(this.card, this.state.summary);
+        setCardSummary1(this.card, this.state.summary);
         setCardAuthor(this.card, this.state.author);
         setCardBtn(this.card, this.state.btnTitle, this.state.btnLink);
         this.setState({
@@ -821,6 +861,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         setCardTitle(this.card, this.state.title);
         setCardImageLink(this.card, this.state.imageLink);
         setCardSummary(this.card, event.target.value);
+        setCardSummary1(this.card, event.target.value);
         setCardAuthor(this.card, this.state.author);
         setCardBtn(this.card, this.state.btnTitle, this.state.btnLink);
         this.setState({
@@ -839,6 +880,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         setCardTitle(this.card, this.state.title);
         setCardImageLink(this.card, this.state.imageLink);
         setCardSummary(this.card, this.state.summary);
+        setCardSummary1(this.card, this.state.summary);
         setCardAuthor(this.card, event.target.value);
         setCardBtn(this.card, this.state.btnTitle, this.state.btnLink);
         this.setState({
@@ -857,6 +899,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         setCardTitle(this.card, this.state.title);
         setCardImageLink(this.card, this.state.imageLink);
         setCardSummary(this.card, this.state.summary);
+        setCardSummary1(this.card, this.state.summary);
         setCardAuthor(this.card, this.state.author);
         if (event.target.value && this.state.btnLink) {
             setCardBtn(this.card, event.target.value, this.state.btnLink);
@@ -896,6 +939,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         const showDefaultCard = (!this.state.title && !this.state.imageLink && !this.state.summary && !this.state.author && !this.state.btnTitle && !event.target.value);
         setCardTitle(this.card, this.state.title);
         setCardSummary(this.card, this.state.summary);
+        setCardSummary1(this.card, this.state.summary);
         setCardAuthor(this.card, this.state.author);
         setCardImageLink(this.card, this.state.imageLink);
         if (this.state.btnTitle && event.target.value) {
