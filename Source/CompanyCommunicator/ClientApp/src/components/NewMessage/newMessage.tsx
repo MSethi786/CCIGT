@@ -335,11 +335,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                                     <Flex column className="formContentContainer">
                                         <Input className="inputField"
                                             value={this.state.title}
-<<<<<<< HEAD
-                                            label={this.localize("TitleText")}
-=======
                                             label={this.localize("TitleTextGleason")}
->>>>>>> 7c105e7535fce6033565814232118f17fe179104
                                             placeholder={this.localize("PlaceHolderTitle")}
                                             onChange={this.onTitleChanged}
                                             autoComplete="off"
