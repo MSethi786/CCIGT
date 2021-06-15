@@ -3,93 +3,6 @@
 
 import { TFunction } from "i18next";
 
-var dd = [
-    "This is the first inline. ",
-    {
-      "type": "TextRun",
-      "text": "We support colors,",
-      "color": "good"
-    },
-    {
-      "type": "TextRun",
-      "text": " both regular and subtle. ",
-      "isSubtle": true
-    },
-    {
-      "type": "TextRun",
-      "text": "Text ",
-      "size": "small"
-    },
-    {
-      "type": "TextRun",
-      "text": "of ",
-      "size": "medium"
-    },
-    {
-      "type": "TextRun",
-      "text": "all ",
-      "size": "large"
-    },
-    {
-      "type": "TextRun",
-      "text": "sizes! ",
-      "size": "extraLarge"
-    },
-    {
-      "type": "TextRun",
-      "text": "Light weight text. ",
-      "weight": "lighter"
-    },
-    {
-      "type": "TextRun",
-      "text": "Bold weight text. ",
-      "weight": "bolder"
-    },
-    {
-      "type": "TextRun",
-      "text": "Highlights. ",
-      "highlight": true
-    },
-    {
-      "type": "TextRun",
-      "text": "Italics. ",
-      "italic": true
-    },
-    {
-      "type": "TextRun",
-      "text": "Strikethrough. ",
-      "strikethrough": true
-    },
-    {
-      "type": "TextRun",
-      "text": "Monospace too!",
-      "fontType": "monospace"
-    }
-  ];
-
-  var aa = [
-        {
-            "key": "637gr",
-            "text": "Initialized from content state.",
-            "type": "unstyled",
-            "depth": 0,
-            "inlineStyleRanges": [
-                {
-                    "offset": 0,
-                    "length": 31,
-                    "style": "BOLD"
-                },
-                {
-                    "offset": 0,
-                    "length": 31,
-                    "style": "UNDERLINE"
-                }
-            ],
-            "entityRanges": [],
-            "data": {}
-        }
-    ];
-
 export const getInitAdaptiveCard = (t: TFunction) => {
     const titleTextAsString = t("TitleText");
     return (
@@ -117,8 +30,9 @@ export const getInitAdaptiveCard = (t: TFunction) => {
                     "wrap": true
                 },
                 {
-                    "type": "RichTextBlock",
-                    "inlines": ""
+                    "type": "TextBlock",
+                    "text": "",
+                    "wrap": true
                 },
                 {
                     "type": "TextBlock",
@@ -154,16 +68,16 @@ export const getCardSummary = (card: any) => {
     return card.body[2].text;
 }
 
-export const getCardSummary1 = (card: any) => {
-    return card.body[3].text;
-}
-
 export const setCardSummary = (card: any, summary?: string) => {
     card.body[2].text = summary;
 }
 
+export const getCardSummary1 = (card: any) => {
+    return card.body[3].text;
+}
+
 export const setCardSummary1 = (card: any, summary?: string) => {
-    card.body[3].inlines = aa;
+    card.body[3].text = summary;
 }
 
 export const getCardAuthor = (card: any) => {
