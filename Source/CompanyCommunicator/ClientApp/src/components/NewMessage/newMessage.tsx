@@ -19,6 +19,8 @@ import {
 import { getBaseUrl } from '../../configVariables';
 import { ImageUtil } from '../../utility/imageutility';
 import { TFunction } from "i18next";
+import { Editor } from "react-draft-wysiwyg";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 type dropdownItem = {
     key: string,
@@ -319,13 +321,13 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
     }
 
     public render(): JSX.Element {
-        if (this.state.loader) {
-            return (
-                <div className="Loader">
-                    <Loader />
-                </div>
-            );
-        } else {
+        // if (this.state.loader) {
+        //     return (
+        //         <div className="Loader">
+        //             <Loader />
+        //         </div>
+        //     );
+        // } else {
             if (this.state.page === "CardCreation") {
                 return (
                     <div className="taskModule">
@@ -335,11 +337,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                                     <Flex column className="formContentContainer">
                                         <Input className="inputField"
                                             value={this.state.title}
-<<<<<<< HEAD
                                             label={this.localize("TitleText")}
-=======
-                                            label={this.localize("TitleTextGleason")}
->>>>>>> 7c105e7535fce6033565814232118f17fe179104
                                             placeholder={this.localize("PlaceHolderTitle")}
                                             onChange={this.onTitleChanged}
                                             autoComplete="off"
@@ -374,6 +372,17 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                                                 value={this.state.summary}
                                                 onChange={this.onSummaryChanged}
                                                 fluid />
+                                        </div>
+
+                                        <div className="textArea">
+                                            <Text content={this.localize("RichText")} />
+                                            <Editor
+                                                //editorState={editorState}
+                                                toolbarClassName="toolbarClassName"
+                                                wrapperClassName="wrapperClassName"
+                                                editorClassName="editorClassName"
+                                                //onEditorStateChange={this.onEditorStateChange}
+                                                />
                                         </div>
 
                                         <Input className="inputField"
@@ -562,7 +571,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
             } else {
                 return (<div>Error</div>);
             }
-        }
+        //}
     }
 
     private onGroupSelected = (event: any, data: any) => {
