@@ -43,7 +43,8 @@ export interface IDraftMessage {
     teams: any[],
     rosters: any[],
     groups: any[],
-    allUsers: boolean
+    allUsers: boolean,
+    contentState?: string
 }
 
 export interface formState {
@@ -77,6 +78,7 @@ export interface formState {
     selectedGroups: dropdownItem[],
     errorImageUrlMessage: string,
     errorButtonUrlMessage: string,
+    contentState?: string,
 }
 
 export interface INewMessageProps extends RouteComponentProps, WithTranslation {
@@ -122,6 +124,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
             selectedGroups: [],
             errorImageUrlMessage: "",
             errorButtonUrlMessage: "",
+            contentState: ""
         }
     }
 
@@ -321,6 +324,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
     }
 
     public render(): JSX.Element {
+        const { contentState } = this.state;
         // if (this.state.loader) {
         //     return (
         //         <div className="Loader">
@@ -337,7 +341,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                                     <Flex column className="formContentContainer">
                                         <Input className="inputField"
                                             value={this.state.title}
-                                            label={this.localize("TitleTextGleason")}
+                                            label={this.localize("TitleText")}
                                             placeholder={this.localize("PlaceHolderTitle")}
                                             onChange={this.onTitleChanged}
                                             autoComplete="off"
@@ -366,12 +370,16 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
 
                                         <div className="textArea">
                                             <Text content={this.localize("Summary1")} />
-                                            <TextArea
+                                            <textarea
+          disabled
+          value={JSON.stringify(contentState, null, 4)}
+        /> 
+                                            {/* <TextArea
                                                 autoFocus
                                                 placeholder={this.localize("Summary1")}
                                                 value={this.state.summary}
                                                 onChange={this.onSummaryChanged}
-                                                fluid />
+                                                fluid /> */}
                                         </div>
 
                                         <div className="textArea">
@@ -381,8 +389,12 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                                                 toolbarClassName="toolbarClassName"
                                                 wrapperClassName="wrapperClassName"
                                                 editorClassName="editorClassName"
+                                                placeholder={this.localize("RichText")}
+                                                onContentStateChange={this.onContentStateChange}
                                                 //onEditorStateChange={this.onEditorStateChange}
                                                 />
+
+  
                                         </div>
 
                                         <Input className="inputField"
@@ -957,6 +969,24 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         }
         const link = this.state.btnLink;
         adaptiveCard.onExecuteAction = function (action) { window.open(link, '_blank'); }
+    }
+
+    private onContentStateChange = (contentState) => {
+        let showDefaultCard = (!this.state.title && !this.state.imageLink && !contentState && !this.state.author && !this.state.btnTitle && !this.state.btnLink);
+        setCardTitle(this.card, this.state.title);
+        setCardImageLink(this.card, this.state.imageLink);
+        setCardSummary(this.card, "{ blocks: [ { key: 81udt, text: hello, type: unstyled, depth: 0, inlineStyleRanges: [], entityRanges: [], data: {} } ], entityMap: {} }" );
+        setCardAuthor(this.card, this.state.author);
+        setCardBtn(this.card, this.state.btnTitle, this.state.btnLink);
+        this.setState({
+            contentState,
+            card: this.card
+        }, () => {
+            if (showDefaultCard) {
+                this.setDefaultCard(this.card);
+            }
+            this.updateCard();
+        });
     }
 }
 
