@@ -3,6 +3,78 @@
 
 import { TFunction } from "i18next";
 
+var gg = 
+	 [
+		{
+			"type": "TextRun",
+			"text": "**Hello**",
+			"wrap": true
+		}
+	];
+
+var dd = [
+    {
+      "type": "TextRun",
+      "text": "We support colors,",
+      "color": "good"
+    },
+    {
+      "type": "TextRun",
+      "text": " both regular and subtle. ",
+      "isSubtle": true
+    },
+    {
+      "type": "TextRun",
+      "text": "Text ",
+      "size": "small"
+    },
+    {
+      "type": "TextRun",
+      "text": "of ",
+      "size": "medium"
+    },
+    {
+      "type": "TextRun",
+      "text": "all ",
+      "size": "large"
+    },
+    {
+      "type": "TextRun",
+      "text": "sizes! ",
+      "size": "extraLarge"
+    },
+    {
+      "type": "TextRun",
+      "text": "Light weight text. ",
+      "weight": "lighter"
+    },
+    {
+      "type": "TextRun",
+      "text": "Bold weight text. ",
+      "weight": "bolder"
+    },
+    {
+      "type": "TextRun",
+      "text": "Highlights. ",
+      "highlight": true
+    },
+    {
+      "type": "TextRun",
+      "text": "Italics. ",
+      "italic": true
+    },
+    {
+      "type": "TextRun",
+      "text": "Strikethrough. ",
+      "strikethrough": true
+    },
+    {
+      "type": "TextRun",
+      "text": "Monospace too!",
+      "fontType": "monospace"
+    }
+  ];
+
 export const getInitAdaptiveCard = (t: TFunction) => {
     const titleTextAsString = t("TitleText");
     return (
@@ -35,6 +107,10 @@ export const getInitAdaptiveCard = (t: TFunction) => {
                     "wrap": true
                 },
                 {
+                    "type": "RichTextBlock",
+                    "inlines": ""
+                },
+                {
                     "type": "TextBlock",
                     "wrap": true,
                     "size": "Small",
@@ -42,8 +118,8 @@ export const getInitAdaptiveCard = (t: TFunction) => {
                     "text": ""
                 }
             ],
-            "$schema": "https://adaptivecards.io/schemas/adaptive-card.json",
-            "version": "1.0"
+            "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+            "version": "1.3"
         }
     );
 }
@@ -70,6 +146,7 @@ export const getCardSummary = (card: any) => {
 
 export const setCardSummary = (card: any, summary?: string) => {
     card.body[2].text = summary;
+    console.log(summary);
 }
 
 export const getCardSummary1 = (card: any) => {
@@ -80,12 +157,22 @@ export const setCardSummary1 = (card: any, summary?: string) => {
     card.body[3].text = summary;
 }
 
-export const getCardAuthor = (card: any) => {
+export const getCardRich = (card: any) => {
     return card.body[4].text;
 }
 
+export const setCardRich = (card: any, richText?: any) => {
+   // console.log("richText" + richText);
+    //card.body[4].horizontalAlignment = "center";
+    card.body[4].inlines = richText;
+}
+
+export const getCardAuthor = (card: any) => {
+    return card.body[5].text;
+}
+
 export const setCardAuthor = (card: any, author?: string) => {
-    card.body[4].text = author;
+    card.body[5].text = author;
 }
 
 export const getCardBtnTitle = (card: any) => {
