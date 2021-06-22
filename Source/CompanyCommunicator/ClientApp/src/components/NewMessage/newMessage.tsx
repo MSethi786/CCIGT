@@ -332,13 +332,13 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
     public render(): JSX.Element {
         const { contentState } = this.state;
         const { editorState } = this.state;
-        // if (this.state.loader) {
-        //     return (
-        //         <div className="Loader">
-        //             <Loader />
-        //         </div>
-        //     );
-        // } else {
+        if (this.state.loader) {
+            return (
+                <div className="Loader">
+                    <Loader />
+                </div>
+            );
+        } else {
             if (this.state.page === "CardCreation") {
                 return (
                     <div className="taskModule">
@@ -592,7 +592,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
             } else {
                 return (<div>Error</div>);
             }
-        //}
+        }
     }
 
     private onGroupSelected = (event: any, data: any) => {
