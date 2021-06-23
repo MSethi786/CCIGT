@@ -14,12 +14,12 @@ import './teamTheme.scss';
 import { getDraftNotification, getTeams, createDraftNotification, updateDraftNotification, searchGroups, getGroups, verifyGroupAccess } from '../../apis/messageListApi';
 import {
     getInitAdaptiveCard, setCardTitle, setCardImageLink, setCardSummary,
-    setCardAuthor, setCardBtn, setCardRich
+    setCardAuthor, setCardBtn
 } from '../AdaptiveCard/adaptiveCard';
 import { getBaseUrl } from '../../configVariables';
 import { ImageUtil } from '../../utility/imageutility';
 import { TFunction } from "i18next";
-import { EditorState } from 'draft-js';
+//import { EditorState } from 'draft-js';
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
@@ -44,9 +44,9 @@ export interface IDraftMessage {
     teams: any[],
     rosters: any[],
     groups: any[],
-    allUsers: boolean,
-    contentState?: string,
-    editorState?: string
+    allUsers: boolean
+    //contentState?: string,
+    //editorState?: string
 }
 
 export interface formState {
@@ -79,9 +79,9 @@ export interface formState {
     selectedRosters: dropdownItem[],
     selectedGroups: dropdownItem[],
     errorImageUrlMessage: string,
-    errorButtonUrlMessage: string,
-    contentState?: string,
-    editorState?: string
+    errorButtonUrlMessage: string
+    //contentState?: string,
+    //editorState?: string
 }
 
 export interface INewMessageProps extends RouteComponentProps, WithTranslation {
@@ -126,9 +126,9 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
             selectedRosters: [],
             selectedGroups: [],
             errorImageUrlMessage: "",
-            errorButtonUrlMessage: "",
-            contentState: "",
-            editorState: EditorState.createEmpty()
+            errorButtonUrlMessage: ""
+            //contentState: "",
+            //editorState: EditorState.createEmpty()
         }
     }
 
@@ -219,10 +219,10 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         setCardTitle(card, titleAsString);
         let imgUrl = getBaseUrl() + "/image/imagePlaceholder.png";
         setCardImageLink(card, imgUrl);
-        setCardSummary(card, summaryAsString);
+        //setCardSummary(card, summaryAsString);
         setCardAuthor(card, authorAsString);
         setCardBtn(card, buttonTitleAsString, "https://adaptivecards.io");
-        //setCardRich(card, summaryAsString);
+        setCardSummary(card, summaryAsString);
     }
 
     private getTeamList = async () => {
@@ -303,10 +303,13 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
 
             setCardTitle(this.card, draftMessageDetail.title);
             setCardImageLink(this.card, draftMessageDetail.imageLink);
-            setCardSummary(this.card, draftMessageDetail.summary);
+            //setCardSummary(this.card, draftMessageDetail.summary);
+            //setCardSummary(this.card, draftMessageDetail.summary);
+            if(draftMessageDetail.summary)
+                this.onContentStateChange(draftMessageDetail.summary);
             setCardAuthor(this.card, draftMessageDetail.author);
             setCardBtn(this.card, draftMessageDetail.buttonTitle, draftMessageDetail.buttonLink);
-            //setCardRich(this.card, draftMessageDetail.summary);
+            
 
             this.setState({
                 title: draftMessageDetail.title,
@@ -330,15 +333,15 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
     }
 
     public render(): JSX.Element {
-        const { contentState } = this.state;
-        const { editorState } = this.state;
-        if (this.state.loader) {
-            return (
-                <div className="Loader">
-                    <Loader />
-                </div>
-            );
-        } else {
+        const { summary } = this.state;
+        //const { editorState } = this.state;
+        // if (this.state.loader) {
+        //     return (
+        //         <div className="Loader">
+        //             <Loader />
+        //         </div>
+        //     );
+        // } else {
             if (this.state.page === "CardCreation") {
                 return (
                     <div className="taskModule">
@@ -365,7 +368,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                                         />
                                         <Text className={(this.state.errorImageUrlMessage === "") ? "hide" : "show"} error size="small" content={this.state.errorImageUrlMessage} />
 
-                                        <div className="textArea">
+                                        {/* <div className="textArea">
                                             <Text content={this.localize("Summary")} />
                                             <TextArea
                                                 autoFocus
@@ -373,35 +376,28 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                                                 value={this.state.summary}
                                                 onChange={this.onSummaryChanged}
                                                 fluid />
-                                        </div>
-{/* 
-                                        <div className="textArea">
-                                            <Text content={this.localize("Summary1")} />
-                                            {/* <textarea
-          disabled
-          value={JSON.stringify(contentState, null, 4)}
-        />  */}
-                                            {/* <TextArea
-                                                autoFocus
-                                                placeholder={this.localize("Summary1")}
-                                                value={this.state.summary}
-                                                onChange={this.onSummaryChanged}
-                                                fluid /> 
-                                                <textarea
-          disabled
-          value={draftToHtml(convertToRaw(editorState.getCurrentContent()))}
-        />
                                         </div> */}
 
                                         <div className="textArea">
-                                            <Text content={this.localize("RichText")} />
+                                            <Text content={this.localize("Summary")} />
                                             <Editor
-                                                //editorState={editorState}
-                                                //toolbarClassName="toolbarClassName"
-                                                wrapperClassName="wrapperClassName"
-                                                editorClassName="editorClassName"
-                                                placeholder={this.localize("RichText")}
+                                                wrapperClassName="demo-wrapper"
+                                                editorClassName="demo-editor"
+                                                placeholder={this.localize("Summary")}
                                                 onContentStateChange={this.onContentStateChange}
+                                                toolbar={{
+                                                    options: ['inline', 'fontSize', 'fontFamily', 'list', 'colorPicker', 'textAlign', 'emoji', 'remove', 'history'],
+                                                    inline: {
+                                                      options: ['bold', 'italic', 'underline', 'strikethrough'],
+                                                    },
+                                                    textAlign: {
+                                                        options: ['left', 'center', 'right']
+                                                      },
+                                                      colorPicker: {
+                                                        colors: ['rgb(0,0,0)', 'rgb(65,168,95)', 'rgb(239,239,239)', 'rgb(41,105,176)', 
+                                                                        'rgb(243,121,52)', 'rgb(209,72,65)'],
+                                                      },
+                                                  }}
                                                 //onEditorStateChange={this.onEditorStateChange}
                                                 />
                                         </div>
@@ -592,7 +588,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
             } else {
                 return (<div>Error</div>);
             }
-        }
+        //}
     }
 
     private onGroupSelected = (event: any, data: any) => {
@@ -817,10 +813,13 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         let showDefaultCard = (!event.target.value && !this.state.imageLink && !this.state.summary && !this.state.author && !this.state.btnTitle && !this.state.btnLink);
         setCardTitle(this.card, event.target.value);
         setCardImageLink(this.card, this.state.imageLink);
-        setCardSummary(this.card, this.state.summary);
+        //setCardSummary(this.card, this.state.summary);
+        //setCardSummary(this.card, this.state.summary);
+        if(this.state.summary)
+            this.onContentStateChange(this.state.summary);
         setCardAuthor(this.card, this.state.author);
         setCardBtn(this.card, this.state.btnTitle, this.state.btnLink);
-        //setCardRich(this.card, this.state.summary);
+       
         
         this.setState({
             title: event.target.value,
@@ -848,33 +847,15 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         let showDefaultCard = (!this.state.title && !event.target.value && !this.state.summary && !this.state.author && !this.state.btnTitle && !this.state.btnLink);
         setCardTitle(this.card, this.state.title);
         setCardImageLink(this.card, event.target.value);
-        setCardSummary(this.card, this.state.summary);
+        //setCardSummary(this.card, this.state.summary);
+        //setCardSummary(this.card, this.state.summary);
+        if(this.state.summary)
+            this.onContentStateChange(this.state.summary);
         setCardAuthor(this.card, this.state.author);
         setCardBtn(this.card, this.state.btnTitle, this.state.btnLink);
-        //setCardRich(this.card, this.state.summary);
-
+        
         this.setState({
             imageLink: event.target.value,
-            card: this.card
-        }, () => {
-            if (showDefaultCard) {
-                this.setDefaultCard(this.card);
-            }
-            this.updateCard();
-        });
-    }
-
-    private onSummaryChanged = (event: any) => {
-        let showDefaultCard = (!this.state.title && !this.state.imageLink && !event.target.value && !this.state.author && !this.state.btnTitle && !this.state.btnLink);
-        setCardTitle(this.card, this.state.title);
-        setCardImageLink(this.card, this.state.imageLink);
-        setCardSummary(this.card, event.target.value);
-        setCardAuthor(this.card, this.state.author);
-        setCardBtn(this.card, this.state.btnTitle, this.state.btnLink);
-        //setCardRich(this.card, event.target.value);
-
-        this.setState({
-            summary: event.target.value,
             card: this.card
         }, () => {
             if (showDefaultCard) {
@@ -888,11 +869,13 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         let showDefaultCard = (!this.state.title && !this.state.imageLink && !this.state.summary && !event.target.value && !this.state.btnTitle && !this.state.btnLink);
         setCardTitle(this.card, this.state.title);
         setCardImageLink(this.card, this.state.imageLink);
-        setCardSummary(this.card, this.state.summary);
+       //setCardSummary(this.card, this.state.summary);
+        //setCardSummary(this.card, this.state.summary);
+        if(this.state.summary)
+            this.onContentStateChange(this.state.summary);
         setCardAuthor(this.card, event.target.value);
         setCardBtn(this.card, this.state.btnTitle, this.state.btnLink);
-        //setCardRich(this.card, this.state.summary);
-
+       
         this.setState({
             author: event.target.value,
             card: this.card
@@ -908,10 +891,12 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         const showDefaultCard = (!this.state.title && !this.state.imageLink && !this.state.summary && !this.state.author && !event.target.value && !this.state.btnLink);
         setCardTitle(this.card, this.state.title);
         setCardImageLink(this.card, this.state.imageLink);
-        setCardSummary(this.card, this.state.summary);
+        //setCardSummary(this.card, this.state.summary);
+        //setCardSummary(this.card, this.state.summary);
+        if(this.state.summary)
+            this.onContentStateChange(this.state.summary);
         setCardAuthor(this.card, this.state.author);
-        //setCardRich(this.card, this.state.summary);
-
+        
         if (event.target.value && this.state.btnLink) {
             setCardBtn(this.card, event.target.value, this.state.btnLink);
             this.setState({
@@ -949,11 +934,13 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
 
         const showDefaultCard = (!this.state.title && !this.state.imageLink && !this.state.summary && !this.state.author && !this.state.btnTitle && !event.target.value);
         setCardTitle(this.card, this.state.title);
-        setCardSummary(this.card, this.state.summary);
+        //setCardSummary(this.card, this.state.summary);
+        //setCardSummary(this.card, this.state.summary);
+        if(this.state.summary)
+            this.onContentStateChange(this.state.summary);
         setCardAuthor(this.card, this.state.author);
         setCardImageLink(this.card, this.state.imageLink);
-        //setCardRich(this.card, this.state.summary);
-
+        
         if (this.state.btnTitle && event.target.value) {
             setCardBtn(this.card, this.state.btnTitle, event.target.value);
             this.setState({
@@ -992,22 +979,24 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         adaptiveCard.onExecuteAction = function (action) { window.open(link, '_blank'); }
     }
 
-    private onContentStateChange = (contentState) => {
+    private onContentStateChange = (summary) => {
         var jsonArr = [];
         var data;
         var count = 0;
-        console.log(contentState);
+        let showDefaultCard = (!this.state.title && !this.state.imageLink && !summary && !this.state.author && !this.state.btnTitle && !this.state.btnLink);
+        setCardTitle(this.card, this.state.title);
+        setCardImageLink(this.card, this.state.imageLink);
+        //console.log(contentState);
 
-        for (let i = 0; i < contentState.blocks.length; i++) {
-            //console.log(contentState.blocks[i].key)
-            var element = contentState.blocks[i];
-            if(contentState.blocks[i].text){
+        for (let i = 0; i < summary.blocks.length; i++) {
+            var element = summary.blocks[i];
+            if(summary.blocks[i].text){
                 var eText = "";
                 eText = element.text + '\n'
-               if(contentState.blocks[i].type === "ordered-list-item"){
+               if(summary.blocks[i].type === "ordered-list-item"){
                     count = count + 1;
                     eText = count + ". " + element.text + '\n'
-               } else if(contentState.blocks[i].type === "unordered-list-item"){
+               } else if(summary.blocks[i].type === "unordered-list-item"){
                     eText = "* " + element.text + '\n'
                }
                var color = "default";
@@ -1019,6 +1008,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                var strikethrough = false;
                var underline = false;
                var weight = "default";
+               var cAlign = "left";
 
                for(let j = 0; j < element.inlineStyleRanges.length; j++){
                     var sInline = element.inlineStyleRanges[j];
@@ -1035,7 +1025,6 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                         if(sInline.style === "STRIKETHROUGH"){
                             strikethrough = true
                         }
-                        //alert(sInline.style.substring(0, 4));
                         if(sInline.style.substring(0, 4) === "font"){
                             if(sInline.style.substring(0, 5) === "fontf"){
                                 fontType = "monospace"
@@ -1050,10 +1039,31 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                                 } else if(fontSize[1] < 100){
                                     size = "extraLarge";
                                 }
-                                //alert(fontSize[1]);
                             }
                         }
+
+                        if(sInline.style.substring(0, 4) === "bgco"){
+                            highlight = true;
+                        }
+
+                        if(sInline.style.substring(0, 4) === "colo"){
+                            var rgb = sInline.style;
+                            if(rgb === 'color-rgb(65,168,95)')
+                                color = "good";
+                            if(rgb === 'color-rgb(239,239,239)')
+                                color = "light";
+                            if(rgb === 'color-rgb(41,105,176)')
+                                color = "accent";
+                            if(rgb === 'color-rgb(243,121,52)')
+                                color = "warning";
+                            if(rgb === 'color-rgb(209,72,65)')
+                                color = "attention";
+                        }
                     }
+               }
+
+               if(element.data["text-align"]){
+                   cAlign = element.data["text-align"];
                }
 
                 data = {
@@ -1067,23 +1077,18 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                         "size" : size,
                         "strikethrough": strikethrough,
                         "underline": underline,
-                        "weight" : weight
+                        "weight" : weight,
+                        
                 };
                 jsonArr.push(data);
-                setCardRich(this.card, jsonArr);
+                setCardSummary(this.card, jsonArr, cAlign);
             }
-            //copyItems.push(items[i])
           }
 
-        let showDefaultCard = (!this.state.title && !this.state.imageLink && !contentState && !this.state.author && !this.state.btnTitle && !this.state.btnLink);
-        setCardTitle(this.card, this.state.title);
-        setCardImageLink(this.card, this.state.imageLink);
-        //setCardSummary(this.card, "{ blocks: [ { key: 81udt, text: hello, type: unstyled, depth: 0, inlineStyleRanges: [], entityRanges: [], data: {} } ], entityMap: {} }" );
         setCardAuthor(this.card, this.state.author);
         setCardBtn(this.card, this.state.btnTitle, this.state.btnLink);
-        //setCardRich(this.card, jsonArr)
         this.setState({
-            contentState,
+            summary,
             card: this.card
         }, () => {
             if (showDefaultCard) {
@@ -1093,50 +1098,17 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         });
     }
 
-    // private onEditorStateChange = (editorState) => {
-    //     var htmlValue = draftToHtml(convertToRaw(editorState.getCurrentContent()));
-    //     //var adaptiveCardJson = AdaptiveHtml.toJSON(htmlValue);
-    //     //var adaptivecardRichText = JSON.stringify(adaptiveCardJson, null, '\t');
-    //     //console.log(JSON.stringify(htmlValue, null, '\t'));
-
-    //     //var o = {} // empty Object
-    //     //var key = '';
-    //     var o = []; 
-
-    //     var data = {
-    //         type: 'TextRun',
-    //         text: 'JSON to Adaptive Card JSON',
-    //         color: "good"
-    //     };
-
-    //     var data1 = {
-    //         type: "TextRun",
-    //         text: "Bold weight text. ",
-    //         weight: "bolder"
-    //       };
-
-    //     o.push(data);
-    //     o.push(data1);
-
-    //     var adaptivecardRichText1 = JSON.stringify(o);
-
-    //     //console.log(adaptivecardRichText1);
-
-    //     // var data2 = {
-    //     //     sampleTime: '1450632410296',
-    //     //     data: '78.15431:0.5247617:-0.20050584'
-    //     // };
-
-    //     let showDefaultCard = (!this.state.title && !this.state.imageLink && !editorState && !this.state.author && !this.state.btnTitle && !this.state.btnLink);
+      // private onSummaryChanged = (event: any) => {
+    //     let showDefaultCard = (!this.state.title && !this.state.imageLink && !event.target.value && !this.state.author && !this.state.btnTitle && !this.state.btnLink);
     //     setCardTitle(this.card, this.state.title);
     //     setCardImageLink(this.card, this.state.imageLink);
-    //     //setCardSummary(this.card, editorState);
+    //     setCardSummary(this.card, event.target.value);
     //     setCardAuthor(this.card, this.state.author);
     //     setCardBtn(this.card, this.state.btnTitle, this.state.btnLink);
-    //     setCardRich(this.card, o)
+    //     //setCardSummary(this.card, event.target.value);
 
     //     this.setState({
-    //         editorState,
+    //         summary: event.target.value,
     //         card: this.card
     //     }, () => {
     //         if (showDefaultCard) {
