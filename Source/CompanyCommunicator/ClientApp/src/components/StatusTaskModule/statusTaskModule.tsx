@@ -101,7 +101,7 @@ class StatusTaskModule extends React.Component<StatusTaskModuleProps, IStatusSta
                     setCardTitle(this.card, this.state.message.title);
                     setCardImageLink(this.card, this.state.message.imageLink);
                     //setCardSummary(this.card, this.state.message.summary);
-                    console.log("summaryDB : " + this.state.message.summary);
+                    //console.log("summaryDB : " + this.state.message.summary);
                     this.onContentStateChange(this.state.message.summary);
                     setCardAuthor(this.card, this.state.message.author);
                     if (this.state.message.buttonTitle !== "" && this.state.message.buttonLink !== "") {
@@ -352,7 +352,7 @@ class StatusTaskModule extends React.Component<StatusTaskModuleProps, IStatusSta
         var data;
         var count = 0;
         var summary = JSON.parse(summaryDB);
-        console.log("summary : " + summary);
+        //console.log("summary : " + summary);
 
         for (let i = 0; i < summary.blocks.length; i++) {
             var element = summary.blocks[i];
