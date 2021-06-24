@@ -1088,7 +1088,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         setCardAuthor(this.card, this.state.author);
         setCardBtn(this.card, this.state.btnTitle, this.state.btnLink);
         this.setState({
-            summary,
+            summary : "Gleason PC 1",
             card: this.card
         }, () => {
             if (showDefaultCard) {
