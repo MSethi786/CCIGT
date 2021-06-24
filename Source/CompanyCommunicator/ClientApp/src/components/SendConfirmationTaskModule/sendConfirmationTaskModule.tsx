@@ -98,7 +98,9 @@ class SendConfirmationTaskModule extends React.Component<SendConfirmationTaskMod
                         }, () => {
                             setCardTitle(this.card, this.state.message.title);
                             setCardImageLink(this.card, this.state.message.imageLink);
-                            setCardSummary(this.card, this.state.message.summary);
+                            //setCardSummary(this.card, this.state.message.summary);
+                            console.log("summaryDB : " + this.state.message.summary);
+                            this.onContentStateChange(this.state.message.summary);
                             setCardAuthor(this.card, this.state.message.author);
                             if (this.state.message.buttonTitle && this.state.message.buttonLink) {
                                 setCardBtn(this.card, this.state.message.buttonTitle, this.state.message.buttonLink);
@@ -221,6 +223,111 @@ class SendConfirmationTaskModule extends React.Component<SendConfirmationTaskMod
         } else {
             return (<div></div>);
         }
+    }
+
+    private onContentStateChange = (summaryDB) => {
+        var jsonArr = [];
+        var data;
+        var count = 0;
+        var summary = JSON.parse(summaryDB);
+        console.log("summary : " + summary);
+
+        for (let i = 0; i < summary.blocks.length; i++) {
+            var element = summary.blocks[i];
+            if(summary.blocks[i].text){
+                var eText = "";
+                eText = element.text + '\n'
+               if(summary.blocks[i].type === "ordered-list-item"){
+                    count = count + 1;
+                    eText = count + ". " + element.text + '\n'
+               } else if(summary.blocks[i].type === "unordered-list-item"){
+                    eText = "* " + element.text + '\n'
+               }
+               var color = "default";
+               var fontType = "default";
+               var highlight = false;
+               var isSubtle = false;
+               var italic = false;
+               var size = "default";
+               var strikethrough = false;
+               var underline = false;
+               var weight = "default";
+               var cAlign = "left";
+
+               for(let j = 0; j < element.inlineStyleRanges.length; j++){
+                    var sInline = element.inlineStyleRanges[j];
+                    if(sInline){
+                        if(sInline.style === "BOLD"){
+                            weight = "bolder"
+                        }
+                        if(sInline.style === "ITALIC"){
+                            italic = true
+                        }
+                        if(sInline.style === "UNDERLINE"){
+                            underline = true
+                        }
+                        if(sInline.style === "STRIKETHROUGH"){
+                            strikethrough = true
+                        }
+                        if(sInline.style.substring(0, 4) === "font"){
+                            if(sInline.style.substring(0, 5) === "fontf"){
+                                fontType = "monospace"
+                            }else if(sInline.style.substring(0, 5) === "fonts"){
+                                var fontSize = sInline.style.split('-');
+                                if(fontSize[1] < 12){
+                                    size = "small";
+                                } else if(fontSize[1] < 18){
+                                    size = "medium";
+                                } else if(fontSize[1] < 48){
+                                    size = "large";
+                                } else if(fontSize[1] < 100){
+                                    size = "extraLarge";
+                                }
+                            }
+                        }
+
+                        if(sInline.style.substring(0, 4) === "bgco"){
+                            highlight = true;
+                        }
+
+                        if(sInline.style.substring(0, 4) === "colo"){
+                            var rgb = sInline.style;
+                            if(rgb === 'color-rgb(65,168,95)')
+                                color = "good";
+                            if(rgb === 'color-rgb(239,239,239)')
+                                color = "light";
+                            if(rgb === 'color-rgb(41,105,176)')
+                                color = "accent";
+                            if(rgb === 'color-rgb(243,121,52)')
+                                color = "warning";
+                            if(rgb === 'color-rgb(209,72,65)')
+                                color = "attention";
+                        }
+                    }
+               }
+
+               if(element.data["text-align"]){
+                   cAlign = element.data["text-align"];
+               }
+
+                data = {
+                        "type": 'TextRun',
+                        "text": eText,
+                        "color": color,
+                        "fontType": fontType,
+                        "highlight" : highlight,
+                        "isSubtle" : isSubtle,
+                        "italic" : italic,
+                        "size" : size,
+                        "strikethrough": strikethrough,
+                        "underline": underline,
+                        "weight" : weight,
+                        
+                };
+                jsonArr.push(data);
+                setCardSummary(this.card, jsonArr, cAlign);
+            }
+          }
     }
 }
 
