@@ -986,7 +986,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         let showDefaultCard = (!this.state.title && !this.state.imageLink && !summary && !this.state.author && !this.state.btnTitle && !this.state.btnLink);
         setCardTitle(this.card, this.state.title);
         setCardImageLink(this.card, this.state.imageLink);
-        //console.log(contentState);
+       console.log("summary :" + JSON.stringify(summary));
 
         for (let i = 0; i < summary.blocks.length; i++) {
             var element = summary.blocks[i];
@@ -1088,7 +1088,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         setCardAuthor(this.card, this.state.author);
         setCardBtn(this.card, this.state.btnTitle, this.state.btnLink);
         this.setState({
-            summary : "Gleason PC 1",
+            summary : JSON.stringify(summary),
             card: this.card
         }, () => {
             if (showDefaultCard) {
