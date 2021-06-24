@@ -816,7 +816,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         //setCardSummary(this.card, this.state.summary);
         //setCardSummary(this.card, this.state.summary);
         if(this.state.summary)
-            this.onContentStateChange(this.state.summary);
+            this.onContentStateChange(JSON.parse(this.state.summary));
         setCardAuthor(this.card, this.state.author);
         setCardBtn(this.card, this.state.btnTitle, this.state.btnLink);
        
@@ -850,7 +850,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         //setCardSummary(this.card, this.state.summary);
         //setCardSummary(this.card, this.state.summary);
         if(this.state.summary)
-            this.onContentStateChange(this.state.summary);
+            this.onContentStateChange(JSON.parse(this.state.summary));
         setCardAuthor(this.card, this.state.author);
         setCardBtn(this.card, this.state.btnTitle, this.state.btnLink);
         
@@ -872,7 +872,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
        //setCardSummary(this.card, this.state.summary);
         //setCardSummary(this.card, this.state.summary);
         if(this.state.summary)
-            this.onContentStateChange(this.state.summary);
+            this.onContentStateChange(JSON.parse(this.state.summary));
         setCardAuthor(this.card, event.target.value);
         setCardBtn(this.card, this.state.btnTitle, this.state.btnLink);
        
@@ -894,7 +894,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         //setCardSummary(this.card, this.state.summary);
         //setCardSummary(this.card, this.state.summary);
         if(this.state.summary)
-            this.onContentStateChange(this.state.summary);
+            this.onContentStateChange(JSON.parse(this.state.summary));
         setCardAuthor(this.card, this.state.author);
         
         if (event.target.value && this.state.btnLink) {
@@ -937,7 +937,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         //setCardSummary(this.card, this.state.summary);
         //setCardSummary(this.card, this.state.summary);
         if(this.state.summary)
-            this.onContentStateChange(this.state.summary);
+            this.onContentStateChange(JSON.parse(this.state.summary));
         setCardAuthor(this.card, this.state.author);
         setCardImageLink(this.card, this.state.imageLink);
         
